@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Request edit</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleeapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Request edit</h1>
+<form th:method="patch" th:action="@{/requests/{id}(id=${request.getId()})}" th:object="${request}">
+    <table>
+        <tr>
+            <td>Choose tag:</td>
+            <td><input type="text" th:field="*{tag}" /></td>
+        </tr>
+        <tr>
+            <td>Enter message:</td>
+            <td><textarea th:field="*{message}" rows="15" cols="130" /></td>
+        </tr>
+    </table>
+    <input class="btn btn-secondary" type="submit" value="Update" />
+</form>
+</div>
+</body>
+</html>

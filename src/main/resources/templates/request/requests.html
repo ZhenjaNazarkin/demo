@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Request List</title>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleeapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Request List</h1>
+    <span th:if="${requests.size() == 0}">Request List is empty</span>
+    <table th:if="${requests.size() > 0}" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <td>ID</td>
+            <td>Tag</td>
+
+            <div sec:authorize="hasRole('USER') AND !hasRole('OPERATOR')">
+                <td>Message</td>
+                <td>Status</td>
+                <td>Show</td>
+                <td>Edit</td>
+                <td>Send</td>
+            </div>
+
+            <div sec:authorize="hasRole('OPERATOR')">
+                <td>Details</td>
+                <td>Accept</td>
+                <td>Reject</td>
+            </div>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="req : ${requests}">
+            <td th:text="${req.id}"></td>
+            <td th:text="${req.tag}"></td>
+
+            <div sec:authorize="hasRole('USER') AND !hasRole('OPERATOR')">
+                <td th:text="${req.message}"></td>
+                <td th:text="${req.status}"></td>
+                <td><a class="btn btn-secondary" th:href="@{/requests/{id}(id=${req.getId()})}">Details</a></td>
+                <td><a class="btn btn-success" th:href="@{/requests/{id}/edit(id=${req.getId()})}" th:if="${req.status == 'Черновик'}">Edit</a></td>
+                <td><a class="btn btn-success" th:href="@{/requests/{id}/send(id=${req.getId()})}" th:if="${req.status == 'Черновик'}">Send</a></td>
+            </div>
+
+            <div sec:authorize="hasRole('OPERATOR')">
+                <td><a class="btn btn-secondary" th:href="@{/requests/{id}(id=${req.getId()})}">Details</a></td>
+                <td><a class="btn btn-success" th:href="@{/requests/{id}/accept(id=${req.getId()})}" th:if="${req.status == 'Отправлено'}">Accept</a></td>
+                <td><a class="btn btn-success" th:href="@{/requests/{id}/rejected(id=${req.getId()})}" th:if="${req.status == 'Отправлено'}">Reject</a></td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+      <a sec:authorize="hasRole('USER') AND !hasRole('OPERATOR')" class="btn btn-success" href="/requests/new">Создать новую заявку</a>
+      <a class="btn btn-success" href="/logout">Выйти</a>
+    </div>
+</div>
+
+</body>
+</html>
